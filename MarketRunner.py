@@ -1,4 +1,5 @@
-from Market import Sim, Plotter
+from MarketPlotter import MarketPlotter
+from Market import Sim
 from Cookbook import Products
 
 sim = Sim(100)
@@ -15,7 +16,7 @@ sim.setProducer(Products.shovel,1000,1.0)
 
 sim.simulate()
 
-Plotter.plot(sim)
+MarketPlotter.plot(sim)
 
 
 # TODO

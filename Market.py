@@ -1,6 +1,6 @@
 from math import sqrt, floor
 from functools import reduce
-import matplotlib.pyplot as plotter
+
 import random
 from Cookbook import Products, getIngredientQuantity, getIngredients
 
@@ -96,7 +96,7 @@ class Sim:
         for i in range(self.numSteps):
             # Throw in an anomaly
             if i == floor(self.numSteps / 2):
-                self.producers[Products.steel].efficiency /= 10
+                self.producers[Products.steel].efficiency /= 2
 
             # Update market prices, consumer demand and production quantities in that order
             self.updateMarketPrices()
@@ -227,94 +227,3 @@ class Consumer:
         """ Gets the allocated budget for the specified item type """
 
         return self.totalBudget * self.demands[productType] / sum(self.demands)
-
-class Plotter:
-    @staticmethod
-    def plot(sim):
-        """ Plots simulation data """
-
-        Plotter.plotMarketPrice(sim)
-        Plotter.plotQuantity(sim)
-
-        plotter.show()
-
-    @staticmethod
-    def plotMarketPrice(sim):
-        plotter.figure()
-        i = 1
-        for t in Products:
-            iteration = list(map(lambda x: x.iteration, sim.history))
-            marketPrice = list(map(lambda x: x.data[t].marketPrice, sim.history))
-
-            plotter.subplot(2,2,i)
-            plotter.plot(iteration,marketPrice)
-            plotter.xlabel("Iteration")
-            plotter.ylabel("Market Price ($)")
-            plotter.title(t.name)
-            plotter.grid(True)
-            plotter.tight_layout()
-            i += 1
-        plotter.show(block=False)
-
-    @staticmethod
-    def plotQuantity(sim):
-        plotter.figure()
-        i = 1
-        for t in Products:
-            iteration = list(map(lambda x: x.iteration, sim.history))
-            quantity = list(map(lambda x: x.data[t].quantity, sim.history))
-
-            plotter.subplot(2,2,i)
-            plotter.plot(iteration,quantity)
-            plotter.xlabel("Iteration")
-            plotter.ylabel("Quantity")
-            plotter.title(t.name)
-            plotter.grid(True)
-            plotter.tight_layout()
-            i += 1
-        plotter.show(block=False)
-
-    @staticmethod
-    def plotProfitAndRevenue(sim):
-        plotter.figure()
-        i = 1
-        for t in Products:
-            iteration = list(map(lambda x: x.iteration, sim.history))
-            profit = list(map(lambda x: x.data[t].profit, sim.history))
-            revenue = list(map(lambda x: x.data[t].revenue, sim.history))
-
-            plotter.subplot(2,2,i)
-            plotter.plot(iteration,profit)
-            plotter.plot(iteration,revenue)
-            plotter.xlabel("Iteration")
-            plotter.ylabel("Profit ($)")
-            plotter.legend(["Profit","Revenue"])
-            plotter.title(t.name)
-            plotter.grid(True)
-            plotter.tight_layout()
-            i += 1
-        plotter.show(block=False)
-
-    @staticmethod
-    def plotCosts(sim):
-        plotter.figure()
-        i = 1
-        for t in Products:
-            iteration = list(map(lambda x: x.iteration, sim.history))
-            totalLaborCost = list(map(lambda x: x.data[t].totalLaborCost, sim.history))
-            totalMaterialCost = list(map(lambda x: x.data[t].totalMaterialCost, sim.history))
-            totalCost = list(map(lambda x: x.data[t].totalCost, sim.history))
-
-            plotter.subplot(2,2,i)
-            plotter.plot(iteration,totalLaborCost)
-            plotter.plot(iteration,totalMaterialCost)
-            plotter.plot(iteration,totalCost)
-            plotter.xlabel("Iteration")
-            plotter.ylabel("Cost ($)")
-            plotter.legend(["Labor","Materials","Total"])
-            plotter.title(t.name)
-            plotter.grid(True)
-            plotter.tight_layout()
-            i += 1
-        plotter.show(block=False)
-   

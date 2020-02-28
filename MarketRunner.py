@@ -3,24 +3,10 @@ from Market import Sim
 from Cookbook import Products
 
 sim = Sim(100)
-sim.marketDelay = 0.75
-
-sim.addConsumer(100000,[10,40,30,100])
-sim.addConsumer(50000,[50,0,20,50])
-
-# NOTE: Currently only supports one producer for each item type
-sim.setProducer(Products.wood,10000,0.1)
-sim.setProducer(Products.ore,10000,0.25)
-sim.setProducer(Products.steel,1000,0.5)
-sim.setProducer(Products.shovel,1000,1.0)
-
 sim.simulate()
-
 MarketPlotter.plot(sim)
 
-
 # TODO
-#  - Change relationships to adjacency tables where appropriate
 #  - Add a more complex goods structure and see how it holds up
 #  - Refactor into separate factions
 #     - Faction has an array of producers for each item type.

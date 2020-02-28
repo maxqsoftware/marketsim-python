@@ -64,28 +64,17 @@ class Sim:
     def __init__(self,numSteps):
         self.numSteps = numSteps
         self.marketPrices = [0] * len(Products)
-        self.producers = [0] * len(Products)
 
-    def addConsumer(self,totalBudget,demands):
-        """ Add a consumer with the specified budget and demands to the simulation. """
+        # Initialize a default set of consumers
+        self.consumers = []
 
-        consumer = Consumer()
-        consumer.totalBudget = totalBudget
-        consumer.demands = demands
-        self.consumers.append(consumer)
+        for i in range(5):
+            self.consumers.append(Consumer.default())
 
-    def getProducer(self,productType):
-        """ Returns the producer for the product type """
-        return self.producers[productType]
-
-    def setProducer(self,productType,efficiency,laborRate):
-        """ Add a producer of the specified product type to the simulation. """
-
-        producer = Producer(productType)
-        producer.efficiency = efficiency
-        producer.laborRate = laborRate
-
-        self.producers[productType] = producer
+        # Intialize a default set of producers
+        self.producers = [None] * len(Products)
+        for product in Products:
+            self.producers[product] = Producer(product)
 
     def simulate(self):
         """ Start the simulation """
@@ -111,7 +100,7 @@ class Sim:
     def initializeMarketPrices(self):
         """ Calculates initial guesses for the market prices """
 
-        eps = 1E-6
+        eps = 1E-2
 
         for t in Products:
             previousPrice = -1.0
@@ -171,10 +160,10 @@ class Producer:
 
     # Scaling factor to account for reduced labor efficiency
     # as the quantity output increases.
-    efficiency = 1
+    efficiency = 10000
 
     # Nominal labor rate for producing a single unit
-    laborRate = 1
+    laborRate = 0.1
 
     def __init__(self,output):
         self.output = output
@@ -204,18 +193,22 @@ class Consumer:
         demands for each type of good. Budget for each item type is allocated
         proportionally based on the demand for that object. """
 
-    totalBudget = 100000
+    budget = 100000
     demands = []
 
-    def __init__(self):
+    def __init__(self,budget,demands):
         """Initialize a Consumer object with equal demand for each item type."""
+        self.budget = budget
+        self.demands = demands
 
-        # Initialize demands for each item type
-        self.demands = [100] * len(Products)
+    @classmethod
+    def default(cls):
+        """Initialize a Consumer object with equal demand for each item type."""
+        demands = [100] * len(Products)
+        return cls(1000000,demands)
 
     def updateDemands(self):  
         """Randomly change consumer demands for each item type"""
-
         for item in Products:
             self.demands[item] += random.randint(-1,1)
 
@@ -225,5 +218,4 @@ class Consumer:
 
     def getItemBudget(self,productType):
         """ Gets the allocated budget for the specified item type """
-
-        return self.totalBudget * self.demands[productType] / sum(self.demands)
+        return self.budget * self.demands[productType] / sum(self.demands)

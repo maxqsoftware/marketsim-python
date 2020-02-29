@@ -1,6 +1,5 @@
 from math import sqrt, floor
 from functools import reduce
-
 import random
 from Cookbook import Products, getIngredientQuantity, getIngredients
 
@@ -42,9 +41,6 @@ class Sim:
     """ Simulate a perfectly competitive economy. The economy may contain a variable number
         of consumers and a single producer for each item type. """
 
-    # Number of steps in the simulation
-    numSteps = 1000
-
     # Historical data
     history = []
 
@@ -59,10 +55,9 @@ class Sim:
 
     # Constant in range [0.0,1.0] used to specify how quickly market price adapts.
     # Large values will result in slower adaptations to change in supply and demand.
-    marketDelay = 0.9
+    marketDelay = 0.75
 
-    def __init__(self,numSteps):
-        self.numSteps = numSteps
+    def __init__(self):
         self.marketPrices = [0.0] * len(Products)
 
         # Initialize a default set of consumers
@@ -76,25 +71,17 @@ class Sim:
         for product in Products:
             self.producers[product] = Producer(product)
 
-    def simulate(self):
-        """ Start the simulation """
-        
-        self.initializeMarketPrices()
+    def step(self,i):
+        """ Simulates one step of the simulation. """
 
-        print("Simulating...")
-        for i in range(self.numSteps):
-            if i == floor(self.numSteps/2):
-                self.producers[Products.carbon].efficiency *= 2
+        self.updateMarketPrices()
+        for consumer in self.consumers:
+            consumer.updateDemands()
+        self.updateProducerQuantities()
 
-            # Update market prices, consumer demand and production quantities in that order
-            self.updateMarketPrices()
-            for consumer in self.consumers:
-                consumer.updateDemands()
-            self.updateProducerQuantities()
+        # Record data and store in history
+        self.history.append(SimRecord(i,self.producers,self.consumers,self.marketPrices))
 
-            # Record data and store in history
-            self.history.append(SimRecord(i,self.producers,self.consumers,self.marketPrices))
-        print("Done!")
 
     def initializeMarketPrices(self):
         """ Calculates initial guesses for the market prices """

@@ -2,7 +2,8 @@ from MarketPlotter import MarketPlotter
 from Market import Sim
 from Cookbook import Products
 
-sim = Sim(100)
+sim = Sim(1000)
+sim.marketDelay = 0.75
 sim.simulate()
 MarketPlotter.plot(sim)
 

@@ -59,11 +59,11 @@ class Sim:
 
     # Constant in range [0.0,1.0] used to specify how quickly market price adapts.
     # Large values will result in slower adaptations to change in supply and demand.
-    marketDelay = 0.5
+    marketDelay = 0.9
 
     def __init__(self,numSteps):
         self.numSteps = numSteps
-        self.marketPrices = [0] * len(Products)
+        self.marketPrices = [0.0] * len(Products)
 
         # Initialize a default set of consumers
         self.consumers = []
@@ -83,9 +83,8 @@ class Sim:
 
         print("Simulating...")
         for i in range(self.numSteps):
-            # Throw in an anomaly
-            if i == floor(self.numSteps / 2):
-                self.producers[Products.steel].efficiency /= 2
+            if i == floor(self.numSteps/2):
+                self.producers[Products.carbon].efficiency *= 2
 
             # Update market prices, consumer demand and production quantities in that order
             self.updateMarketPrices()
@@ -100,14 +99,33 @@ class Sim:
     def initializeMarketPrices(self):
         """ Calculates initial guesses for the market prices """
 
-        eps = 1E-2
+        print("Initializing market prices...")
+        eps = 1E-3
+        iteration = 0
+        solutionConverged = False
+        error = [-1.0] * len(Products)
+        previousMarketPrices = [1] * len(Products)
+        while not solutionConverged: 
+            iteration += 1
+            if iteration > 1000:
+                print("Market prices failed to converge after 1000 iterations... exiting.")
+                exit()
 
-        for t in Products:
-            previousPrice = -1.0
-            while abs(self.marketPrices[t] - previousPrice) > eps: 
-                previousPrice = self.marketPrices[t]
-                self.updateMarketPrices()
-                self.updateProducerQuantities()
+            self.updateMarketPrices()
+            self.updateProducerQuantities()
+
+            # Calculate error and determine if the market prices for all products
+            # have converged to within the specified error limit
+            solutionConverged = True
+            for product in Products:
+                error[product] =  self.marketPrices[product] - previousMarketPrices[product]
+                if abs(error[product]) > eps:
+                    solutionConverged = False
+                previousMarketPrices[product] = self.marketPrices[product]
+           
+        print("Solution converged after " + str(iteration) + " iterations")
+        for product in Products:
+            print("{0:30s}\t${1:0.2f}".format(product.name, self.marketPrices[product]))
 
     def updateMarketPrices(self):
         """ Calculate the new market prices based on data from the previous iteration """
@@ -156,7 +174,7 @@ class Producer:
     quantity = 0
 
     # The item type produced by this producer
-    output = Products.wood
+    output = Products.water
 
     # Scaling factor to account for reduced labor efficiency
     # as the quantity output increases.

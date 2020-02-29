@@ -8,7 +8,6 @@ class MarketPlotter:
         """ Plots simulation data """
 
         MarketPlotter.plotMarketPrice(sim)
-        MarketPlotter.plotQuantity(sim)
 
         plotter.show()
 
@@ -20,14 +19,17 @@ class MarketPlotter:
             iteration = list(map(lambda x: x.iteration, sim.history))
             marketPrice = list(map(lambda x: x.data[t].marketPrice, sim.history))
 
-            plotter.subplot(2,2,i)
             plotter.plot(iteration,marketPrice)
             plotter.xlabel("Iteration")
             plotter.ylabel("Market Price ($)")
-            plotter.title(t.name)
+            plotter.yscale("log")
             plotter.grid(True)
             plotter.tight_layout()
+
             i += 1
+
+        plotter.title("Market Prices")
+        plotter.legend(Products.names())
         plotter.show(block=False)
 
     @staticmethod
@@ -38,7 +40,7 @@ class MarketPlotter:
             iteration = list(map(lambda x: x.iteration, sim.history))
             quantity = list(map(lambda x: x.data[t].quantity, sim.history))
 
-            plotter.subplot(2,2,i)
+            plotter.subplot(6,5,i)
             plotter.plot(iteration,quantity)
             plotter.xlabel("Iteration")
             plotter.ylabel("Quantity")
@@ -46,6 +48,8 @@ class MarketPlotter:
             plotter.grid(True)
             plotter.tight_layout()
             i += 1
+        
+        plotter.legend(Products.names())
         plotter.show(block=False)
 
     @staticmethod

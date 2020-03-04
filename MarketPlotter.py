@@ -1,5 +1,5 @@
 from Market import Sim
-from Cookbook import Products
+from Cookbook import ProductType
 import matplotlib.pyplot as plotter
 
 class MarketPlotter:
@@ -15,7 +15,7 @@ class MarketPlotter:
     def plotMarketPrice(sim):
         plotter.figure()
         i = 1
-        for t in Products:
+        for t in ProductType:
             iteration = list(map(lambda x: x.iteration, sim.history))
             marketPrice = list(map(lambda x: x.data[t].marketPrice, sim.history))
 
@@ -29,14 +29,14 @@ class MarketPlotter:
             i += 1
 
         plotter.title("Market Prices")
-        plotter.legend(Products.names())
+        plotter.legend(ProductType.names())
         plotter.show(block=False)
 
     @staticmethod
     def plotQuantity(sim):
         plotter.figure()
         i = 1
-        for t in Products:
+        for t in ProductType:
             iteration = list(map(lambda x: x.iteration, sim.history))
             quantity = list(map(lambda x: x.data[t].quantity, sim.history))
 
@@ -49,14 +49,14 @@ class MarketPlotter:
             plotter.tight_layout()
             i += 1
         
-        plotter.legend(Products.names())
+        plotter.legend(ProductType.names())
         plotter.show(block=False)
 
     @staticmethod
     def plotProfitAndRevenue(sim):
         plotter.figure()
         i = 1
-        for t in Products:
+        for t in ProductType:
             iteration = list(map(lambda x: x.iteration, sim.history))
             profit = list(map(lambda x: x.data[t].profit, sim.history))
             revenue = list(map(lambda x: x.data[t].revenue, sim.history))
@@ -77,7 +77,7 @@ class MarketPlotter:
     def plotCosts(sim):
         plotter.figure()
         i = 1
-        for t in Products:
+        for t in ProductType:
             iteration = list(map(lambda x: x.iteration, sim.history))
             totalLaborCost = list(map(lambda x: x.data[t].totalLaborCost, sim.history))
             totalMaterialCost = list(map(lambda x: x.data[t].totalMaterialCost, sim.history))

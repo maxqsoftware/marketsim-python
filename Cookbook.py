@@ -1,6 +1,27 @@
 from enum import IntEnum
 
-class Products(IntEnum):
+class Units:
+    g = 0.001
+    kg = 1.0
+    ton = 2000.0
+    mm = 0.001
+    cm = 0.01
+    m = 1.0
+    km = 1000.0
+    each = 1.0
+
+class Product:
+    quantity = 0
+    ingredients = {}
+
+    def __init__(self,quantity,ingredients):
+        self.quantity = quantity
+        self.ingredients = ingredients
+
+    def getQuantity(self):
+        return self.quantity.quantity
+
+class ProductType(IntEnum):
     """ Enumeration of all the different product types """
     helium = 0
     carbon = 1
@@ -36,12 +57,12 @@ class Products(IntEnum):
     @staticmethod
     def names():
         namesList = []
-        for product in Products:
+        for product in ProductType:
             namesList.append(product.name)
         return namesList
 
 # Adjacency matrix containing ingredients
-_ingredients = [[0 for i in range(len(Products))] for j in range(len(Products))]
+_ingredients = [[0 for i in range(len(ProductType))] for j in range(len(ProductType))]
 
 def getIngredients(product):
     """ Returns an array mapping between ingredient type and the quantity in product. """
@@ -57,43 +78,43 @@ def _set(product,ingredient,value):
 # -----------------------------------------------------------------------------------
 
 # Setup the material dependencies
-_set(Products.hydrogenFuelCell,Products.water, 1)
-_set(Products.hydrogenFuelCell,Products.electronics,5)
-_set(Products.hydrogenFuelCell,Products.platinum,10)
+_set(ProductType.hydrogenFuelCell,ProductType.water, 1 * Units.kg)
+_set(ProductType.hydrogenFuelCell,ProductType.electronics, 5)
+_set(ProductType.hydrogenFuelCell,ProductType.platinum,10)
 
-_set(Products.miningEquipment, Products.tungsten, 5)
-_set(Products.miningEquipment, Products.titanium, 5)
-_set(Products.miningEquipment, Products.iron, 10)
+_set(ProductType.miningEquipment, ProductType.tungsten, 5)
+_set(ProductType.miningEquipment, ProductType.titanium, 5)
+_set(ProductType.miningEquipment, ProductType.iron, 10)
 
-_set(Products.superConductor, Products.helium, 10)
+_set(ProductType.superConductor, ProductType.helium, 10)
 
-_set(Products.fertilizer, Products.phosphorus, 5)
+_set(ProductType.fertilizer, ProductType.phosphorus, 5)
 
-_set(Products.carbonNanotubes, Products.carbon, 5)
+_set(ProductType.carbonNanotubes, ProductType.carbon, 5)
 
-_set(Products.graphene, Products.carbon, 5)
+_set(ProductType.graphene, ProductType.carbon, 5)
 
-_set(Products.electronics, Products.graphene, 1)
-_set(Products.electronics, Products.copper, 1)
+_set(ProductType.electronics, ProductType.graphene, 1)
+_set(ProductType.electronics, ProductType.copper, 1)
 
-_set(Products.hullPlating, Products.titanium, 10)
-_set(Products.hullPlating, Products.aluminum, 10)
+_set(ProductType.hullPlating, ProductType.titanium, 10)
+_set(ProductType.hullPlating, ProductType.aluminum, 10)
 
-_set(Products.nuclearFuelCell, Products.uranium, 10)
-_set(Products.nuclearFuelCell, Products.lead, 50)
-_set(Products.nuclearFuelCell, Products.electronics, 50)
+_set(ProductType.nuclearFuelCell, ProductType.uranium, 10)
+_set(ProductType.nuclearFuelCell, ProductType.lead, 50)
+_set(ProductType.nuclearFuelCell, ProductType.electronics, 50)
 
-_set(Products.solarCell, Products.graphene, 10)
+_set(ProductType.solarCell, ProductType.graphene, 10)
 
-_set(Products.shieldGenerator, Products.superConductor, 10)
-_set(Products.shieldGenerator, Products.electronics, 10)
+_set(ProductType.shieldGenerator, ProductType.superConductor, 10)
+_set(ProductType.shieldGenerator, ProductType.electronics, 10)
 
-_set(Products.thrusters, Products.copper, 5)
-_set(Products.thrusters, Products.tungsten, 5)
+_set(ProductType.thrusters, ProductType.copper, 5)
+_set(ProductType.thrusters, ProductType.tungsten, 5)
 
-_set(Products.fissionReactor, Products.nuclearFuelCell, 6)
-_set(Products.fissionReactor, Products.electronics, 1)
+_set(ProductType.fissionReactor, ProductType.nuclearFuelCell, 6)
+_set(ProductType.fissionReactor, ProductType.electronics, 1)
 
-_set(Products.spacecraft, Products.fissionReactor, 1)
-_set(Products.spacecraft, Products.shieldGenerator, 4)
-_set(Products.spacecraft, Products.thrusters, 8)
+_set(ProductType.spacecraft, ProductType.fissionReactor, 1)
+_set(ProductType.spacecraft, ProductType.shieldGenerator, 4)
+_set(ProductType.spacecraft, ProductType.thrusters, 8)

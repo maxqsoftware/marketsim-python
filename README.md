@@ -9,6 +9,7 @@ python -m pip install -U matplotlib
 ```
 
 ## To Do
+ - Add units. Market prices are per unit X. Production requires Y to produce Z.
  - Create a mini-game out of the market simulation
  - Come up with a set of actions that the user can perform that will change market prices
  - Will need to create some sort of state machine "choose your own adventure" type thing
